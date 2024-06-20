@@ -4,7 +4,7 @@ resource "helm_release" "keycloak" {
 
   repository = "https://codecentric.github.io/helm-charts"
   chart      = "keycloak"
-  version    = "15.0.2"
+  version    = "20.0.4"
 
   values = concat([
     # https://github.com/codecentric/helm-charts/blob/keycloak-15.0.2/charts/keycloak/values.yaml
@@ -25,7 +25,7 @@ resource "helm_release" "keycloak" {
 
   set_sensitive {
     name  = "nebari_bot_password"
-    value = var.nebari-bot-password
+    value = var.nebari_bot_password
   }
 
   set {
@@ -48,12 +48,11 @@ resource "kubernetes_manifest" "keycloak-http" {
       routes = [
         {
           kind  = "Rule"
-          match = "Host(`${var.external-url}`) && PathPrefix(`/auth`) "
+          match = "Host(`${var.external-url}`) && PathPrefix(`/auth`)"
           services = [
             {
               name = "keycloak-headless"
-              # Really not sure why 8080 works here
-              port      = 80
+              port = 80
               namespace = var.namespace
             }
           ]
